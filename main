@@ -51,7 +51,7 @@ int main()
         printf("\n");
         // 判斷遊戲是否結束，調用 is_game_over 函數時，傳遞 black 和 tries 的值
         result = is_game_over(&black, tries);
-
+        printf("%d",result);
         // 如果結果不為0，就跳出循環
         if (result != 0) {
             break;
@@ -157,18 +157,15 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
     // 如果黑子的數量等於數字的個數，就表示玩家猜對了，把提示設為BBBB
     if (*black == NUM_SIZE) // 用*來訪問指針指向的變數
     {
-        for (int i = 0; i < NUM_SIZE; i++) 
-        {
-            hints[i] = 'B';
-        }
+        *black=NUM_SIZE;
     }
 }
 
 // 判斷遊戲是否結束的函數實現
-int is_game_over(int black, int tries)
+int is_game_over(int *black, int tries)
 {
     // 如果黑子的數量等於數字的個數，就表示玩家猜對了
-    if (black == NUM_SIZE)
+    if (*black == NUM_SIZE)
     {
         return 1;
     }
