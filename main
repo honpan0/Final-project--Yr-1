@@ -44,6 +44,10 @@ int main()
 	  int black = 0;
         compare_numbers(&black);
         // 輸出提示
+        // 如果結果不為0，就跳出循環
+        if (result != 0) {
+            break;
+        }
         printf("提示：");
         for (int i = 0; i < NUM_SIZE; i++) {
             printf("%c ", hints[i]);
@@ -51,10 +55,7 @@ int main()
         printf("\n");
         // 判斷遊戲是否結束，調用 is_game_over 函數時，傳遞 black 和 tries 的值
         result = is_game_over(&black, tries);
-        // 如果結果不為0，就跳出循環
-        if (result != 0) {
-            break;
-        }
+        
     }
     // 根據結果輸出不同的信息
     if (result == 1) 
@@ -122,6 +123,11 @@ int read_input()
 
 void compare_numbers(int* black) // 用指針參數來修改黑子的數量
 {
+    int k=0;
+    int x[4];
+    for (int i=0;i<4;i++){
+        hints[i]=' ';
+    }
     // 初始化黑子和白子的數量為0
     *black = 0; // 用*來訪問指針指向的變數
     int white = 0;
@@ -132,12 +138,10 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
         if (input[i] == numbers[i]) 
         {
             (*black)++; // 用*來訪問指針指向的變數
-            hints[i] = 'B';
-        } else 
-        {
-            // 否則，就把提示設為-
-            hints[i] = '-';
-        }
+            hints[k] = 'B';
+            x[k]=i;
+            k++;
+        } 
     }
 
     for (int i = 0; i < NUM_SIZE; i++) 
@@ -145,13 +149,19 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
         for (int j = 0; j < NUM_SIZE; j++) 
         {
             // 如果數字對但位置不對，並且提示還沒有設為B，就增加白子的數量，並把提示設為W
-            if (input[i] == numbers[j] && hints[j] != 'B') 
+            if (input[i] == numbers[j] &&  input[x[j]]!=numbers[x[j]]) 
             {
                 white++;
-                hints[j] = 'W';
+                hints[k] = 'W';
+                k++;
                 break; // 跳出內層循環，避免重複計算
             }
         }
+    }
+    // 如果黑子的數量等於數字的個數，就表示玩家猜對了，把提示設為BBBB
+    if (*black == NUM_SIZE) // 用*來訪問指針指向的變數
+    {
+        *black=NUM_SIZE;
     }
 }
 
