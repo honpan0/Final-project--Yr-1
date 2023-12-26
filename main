@@ -45,6 +45,8 @@ int main()
         compare_numbers(&black);
         // 輸出提示
         // 如果結果不為0，就跳出循環
+        // 判斷遊戲是否結束，調用 is_game_over 函數時，傳遞 black 和 tries 的值
+        result = is_game_over(&black, tries);
         if (result != 0) {
             break;
         }
@@ -53,8 +55,12 @@ int main()
             printf("%c ", hints[i]);
         }
         printf("\n");
-        // 判斷遊戲是否結束，調用 is_game_over 函數時，傳遞 black 和 tries 的值
-        result = is_game_over(&black, tries);
+        
+        for (int i = 0; i < NUM_SIZE; i++) 
+        {
+            printf("%d ", numbers[i]);
+        }
+        printf("\n");
         
     }
     // 根據結果輸出不同的信息
