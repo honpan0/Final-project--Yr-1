@@ -1,0 +1,182 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_TRIES 10 // 最大的猜測次數
+#define NUM_SIZE 4 // 數字的個數
+#define NUM_MIN 1 // 數字的最小值
+#define NUM_MAX 6 // 數字的最大值
+
+// 宣告一些全域變量，用於存儲電腦的數字、玩家的輸入和提示
+int numbers[NUM_SIZE];
+int input[NUM_SIZE];
+char hints[NUM_SIZE];
+
+// 宣告一些函數原型，用於實現遊戲的邏輯
+void generate_random_numbers();  // 生成隨機數字
+int read_input(); // 讀取玩家的輸入，並檢查是否合法，返回0或1
+void compare_numbers(); // 比較玩家的輸入和電腦的數字，並給出提示
+int is_game_over(); // 判斷遊戲是否結束，並返回結果，0表示遊戲繼續，1表示玩家贏了，-1表示玩家輸了
+
+int main() 
+{
+    generate_random_numbers();
+    int tries = 0;
+    int result = 0;
+    printf("歡迎來到珠璣妙算遊戲！\n");
+    printf("電腦已經隨機生成了四個不重複的數字（%d-%d），你有%d次機會猜出它們。\n", NUM_MIN, NUM_MAX, MAX_TRIES);
+    printf("每次猜測後，電腦會給出提示：B代表黑子，表示數字和位置都對；W代表白子，表示數字對但位置不對；-代表沒有猜中任何數字。\n");
+    printf("請輸入你的猜測，並用空格分隔每個數字，例如：1 2 3 4\n");
+    while (1) {
+        // 增加猜測次數
+        tries++;
+        // 提示玩家輸入
+        printf("第%d次猜測：", tries);
+        // 讀取玩家的輸入，並檢查是否合法
+        int valid = read_input();
+        // 如果不合法，就提示玩家重新輸入，並跳過本次循環
+        if (!valid) {
+            printf("輸入無效，請重新輸入。\n");
+            tries--;
+            continue;
+        }
+
+	  int black = 0;
+        compare_numbers(&black);
+        // 輸出提示
+        printf("提示：");
+        for (int i = 0; i < NUM_SIZE; i++) {
+            printf("%c ", hints[i]);
+        }
+        printf("\n");
+        // 判斷遊戲是否結束，調用 is_game_over 函數時，傳遞 black 和 tries 的值
+        result = is_game_over(&black, tries);
+
+        // 如果結果不為0，就跳出循環
+        if (result != 0) {
+            break;
+        }
+    }
+    // 根據結果輸出不同的信息
+    if (result == 1) 
+    {
+        printf("恭喜你，你猜對了！\n");
+    } else if (result == -1) 
+    {
+        printf("很遺憾，你沒有猜對。電腦的數字是：");
+        for (int i = 0; i < NUM_SIZE; i++) 
+        {
+            printf("%d ", numbers[i]);
+        }
+        printf("\n");
+    }
+    // 結束遊戲
+    return 0;
+}
+
+// 生成隨機數字的函數實現
+void generate_random_numbers() 
+{
+    srand(time(NULL));
+    for (int i = 0; i < NUM_SIZE; i++) {
+        // 生成一個NUM_MIN到NUM_MAX的隨機數
+        int n = rand() % (NUM_MAX - NUM_MIN + 1) + NUM_MIN;
+        // 檢查是否和之前的數字重複，如果是，就重新生成
+        for (int j = 0; j < i; j++) {
+            if (n == numbers[j]) {
+                n = rand() % (NUM_MAX - NUM_MIN + 1) + NUM_MIN;
+                j = -1; // 重置j，重新檢查
+            }
+        }
+        // 把生成的數字存入數組
+        numbers[i] = n;
+    }
+}
+
+// 讀取玩家的輸入的函數實現
+int read_input() 
+{
+    // 用一個循環來讀取四個數字
+    for (int i = 0; i < NUM_SIZE; i++) {
+        int n;   // 讀取一個數字
+        int ret = scanf("%d", &n);  // 用一個變數ret來接收scanf_s的返回值
+        // 檢查是否讀取成功，如果不成功，就返回0，表示輸入無效
+        if (ret != 1) {
+            return 0;
+        }
+        // 檢查是否在NUM_MIN到NUM_MAX的範圍內，如果不是，就返回0，表示輸入無效
+        if (n < NUM_MIN || n > NUM_MAX) {
+            return 0;
+        }
+        // 檢查是否和之前的數字重複，如果是，就返回0，表示輸入無效
+        for (int j = 0; j < i; j++) {
+            if (n == input[j]) {
+                return 0;
+            }
+        }
+        // 把讀取的數字存入數組
+        input[i] = n;
+    }
+    // 如果沒有問題，就返回1，表示輸入有效
+    return 1;
+}
+
+void compare_numbers(int* black) // 用指針參數來修改黑子的數量
+{
+    // 初始化黑子和白子的數量為0
+    *black = 0; // 用*來訪問指針指向的變數
+    int white = 0;
+    // 用一個循環來遍歷四個數字
+    for (int i = 0; i < NUM_SIZE; i++) 
+    {
+        // 如果數字和位置都對，就增加黑子的數量，並把提示設為B
+        if (input[i] == numbers[i]) 
+        {
+            (*black)++; // 用*來訪問指針指向的變數
+            hints[i] = 'B';
+        } else 
+        {
+            // 否則，就把提示設為-
+            hints[i] = '-';
+        }
+    }
+
+    for (int i = 0; i < NUM_SIZE; i++) 
+    {
+        for (int j = 0; j < NUM_SIZE; j++) 
+        {
+            // 如果數字對但位置不對，並且提示還沒有設為B，就增加白子的數量，並把提示設為W
+            if (input[i] == numbers[j] && hints[j] != 'B') 
+            {
+                white++;
+                hints[j] = 'W';
+                break; // 跳出內層循環，避免重複計算
+            }
+        }
+    }
+    // 如果黑子的數量等於數字的個數，就表示玩家猜對了，把提示設為BBBB
+    if (*black == NUM_SIZE) // 用*來訪問指針指向的變數
+    {
+        for (int i = 0; i < NUM_SIZE; i++) 
+        {
+            hints[i] = 'B';
+        }
+    }
+}
+
+// 判斷遊戲是否結束的函數實現
+int is_game_over(int black, int tries)
+{
+    // 如果黑子的數量等於數字的個數，就表示玩家猜對了
+    if (black == NUM_SIZE)
+    {
+        return 1;
+    }
+    // 如果猜測次數超過了最大次數，就表示玩家用完了機會
+    if (tries == MAX_TRIES)
+    {
+        return -1;
+    }
+    // 否則，就表示遊戲還沒有結束
+    return 0;
+}
