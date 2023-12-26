@@ -158,11 +158,6 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
             }
         }
     }
-    // 如果黑子的數量等於數字的個數，就表示玩家猜對了，把提示設為BBBB
-    if (*black == NUM_SIZE) // 用*來訪問指針指向的變數
-    {
-        *black=NUM_SIZE;
-    }
 }
 
 // 判斷遊戲是否結束的函數實現
