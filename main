@@ -155,7 +155,7 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
         for (int j = 0; j < NUM_SIZE; j++) 
         {
             // 如果數字對但位置不對，並且提示還沒有設為B，就增加白子的數量，並把提示設為W
-            if (input[i] == numbers[j] &&  input[x[j]]!=numbers[x[j]]) 
+            if (input[i] == numbers[j] &&  i!=j) 
             {
                 white++;
                 hints[k] = 'W';
