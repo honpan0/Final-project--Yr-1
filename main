@@ -17,16 +17,21 @@ void generate_random_numbers();  // 生成隨機數字
 int read_input(); // 讀取玩家的輸入，並檢查是否合法，返回0或1
 void compare_numbers(); // 比較玩家的輸入和電腦的數字，並給出提示
 int is_game_over(); // 判斷遊戲是否結束，並返回結果，0表示遊戲繼續，1表示玩家贏了，-1表示玩家輸了
-
+int in=1;
 int main() 
 {
+    while(in!=0){
     generate_random_numbers();
     int tries = 0;
     int result = 0;
+    printf("開始遊玩請輸入1，退出輸入0\n");
+    scanf("%d",&in);
+    system("clear");
     printf("歡迎來到珠璣妙算遊戲！\n");
     printf("電腦已經隨機生成了四個不重複的數字（%d-%d），你有%d次機會猜出它們。\n", NUM_MIN, NUM_MAX, MAX_TRIES);
     printf("每次猜測後，電腦會給出提示：B代表黑子，表示數字和位置都對；W代表白子，表示數字對但位置不對；-代表沒有猜中任何數字。\n");
     printf("請輸入你的猜測，並用空格分隔每個數字，例如：1 2 3 4\n");
+    if(in==1){
     while (1) {
         // 增加猜測次數
         tries++;
@@ -55,13 +60,6 @@ int main()
             printf("%c ", hints[i]);
         }
         printf("\n");
-        
-        for (int i = 0; i < NUM_SIZE; i++) 
-        {
-            printf("%d ", numbers[i]);
-        }
-        printf("\n");
-        
     }
     // 根據結果輸出不同的信息
     if (result == 1) 
@@ -76,8 +74,12 @@ int main()
         }
         printf("\n");
     }
-    // 結束遊戲
+    }
+    else{// 結束遊戲
+        printf("謝謝遊玩!!");
+    }
     return 0;
+}
 }
 
 // 生成隨機數字的函數實現
@@ -155,7 +157,7 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
         for (int j = 0; j < NUM_SIZE; j++) 
         {
             // 如果數字對但位置不對，並且提示還沒有設為B，就增加白子的數量，並把提示設為W
-            if (input[i] == numbers[j] &&  input[x[j]]!=numbers[x[j]]) 
+            if (input[i] == numbers[j] &&  i!=j) 
             {
                 white++;
                 hints[k] = 'W';
