@@ -26,12 +26,13 @@ int main()
     int result = 0;
     printf("開始遊玩請輸入1，退出輸入0\n");
     scanf("%d",&in);
+    if(in!=0){
     system("clear");
     printf("歡迎來到珠璣妙算遊戲！\n");
     printf("電腦已經隨機生成了四個不重複的數字（%d-%d），你有%d次機會猜出它們。\n", NUM_MIN, NUM_MAX, MAX_TRIES);
     printf("每次猜測後，電腦會給出提示：B代表黑子，表示數字和位置都對；W代表白子，表示數字對但位置不對；-代表沒有猜中任何數字。\n");
     printf("請輸入你的猜測，並用空格分隔每個數字，例如：1 2 3 4\n");
-    if(in==1){
+    
     while (1) {
         // 增加猜測次數
         tries++;
@@ -59,14 +60,15 @@ int main()
         for (int i = 0; i < NUM_SIZE; i++) {
             printf("%c ", hints[i]);
         }
-        printf("\n");
     }
     // 根據結果輸出不同的信息
     if (result == 1) 
     {
+        system("clear");
         printf("恭喜你，你猜對了！\n");
     } else if (result == -1) 
     {
+        system("clear");
         printf("很遺憾，你沒有猜對。電腦的數字是：");
         for (int i = 0; i < NUM_SIZE; i++) 
         {
@@ -76,9 +78,9 @@ int main()
     }
     }
     else{// 結束遊戲
+        system("clear");
         printf("謝謝遊玩!!");
     }
-    return 0;
 }
 }
 
@@ -165,6 +167,11 @@ void compare_numbers(int* black) // 用指針參數來修改黑子的數量
                 break; // 跳出內層循環，避免重複計算
             }
         }
+    }
+    // 如果黑子的數量等於數字的個數，就表示玩家猜對了，把提示設為BBBB
+    if (*black == NUM_SIZE) // 用*來訪問指針指向的變數
+    {
+        *black=NUM_SIZE;
     }
 }
 
