@@ -68,7 +68,6 @@ int main()
         printf("恭喜你，你猜對了！\n");
     } else if (result == -1) 
     {
-        system("clear");
         printf("很遺憾，你沒有猜對。電腦的數字是：");
         for (int i = 0; i < NUM_SIZE; i++) 
         {
